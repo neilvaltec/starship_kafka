@@ -9,5 +9,5 @@ docker-compose up
 python src/consumer.py
 ```
 ```
-python src/consumer.py
+python src/producer.py
 ```
