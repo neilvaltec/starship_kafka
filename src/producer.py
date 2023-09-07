@@ -16,7 +16,7 @@ def produce_message(producer, num_partitions):
         the_dt = str(datetime.datetime.utcnow())
         val = f"Count: {i} at {the_dt}".encode(encoding='utf8')
         key = str(i).encode(encoding='utf8')  # Use the loop index as the key
-        producer.produce('KafkaExplored', value=val, key=key, callback=delivery_report)
+        producer.produce('starship_topic', value=val, key=key, callback=delivery_report)
 
     # Wait for any outstanding messages to be delivered and delivery reports
     # callbacks to be triggered.

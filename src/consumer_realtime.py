@@ -10,7 +10,7 @@ def consume_messages(index: int):
         # 'auto.offset.reset': 'earliest'
     })
 
-    consumer.subscribe(['KafkaExplored'])
+    consumer.subscribe(['starship_topic'])
 
     while True:
         msg = consumer.poll(0.1)
@@ -19,7 +19,7 @@ def consume_messages(index: int):
         if msg.error():
             print(f"Consumer error: {msg.error()}")
         else:
-            print(f"Received message: {msg.value().decode('utf-8')}")
+            print(f"Received message: {msg.value()}")
 
 def thread_function(concumer_index: int):
     """thread function"""

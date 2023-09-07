@@ -1,0 +1,86 @@
+version: "2"
+
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: docker.io/bitnami/zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka0:
+    container_name: kafka0
+    image: docker.io/bitnami/kafka
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka0_data:/bitnami"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+    command:
+      - /bin/sh
+      - -c
+      - |
+        /opt/bitnami/scripts/kafka/entrypoint.sh /opt/bitnami/scripts/kafka/run.sh &
+        PID=$!
+        sleep 30  # Give Kafka some time to start up
+        /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic starship_topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 3
+        wait $PID
+
+  kafka1:
+    container_name: kafka1
+    image: docker.io/bitnami/kafka
+    ports:
+      - "9093:9093"
+    volumes:
+      - "kafka1_data:/bitnami"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  kafka2:
+    container_name: kafka2
+    image: docker.io/bitnami/kafka
+    ports:
+      - "9094:9094"
+    volumes:
+      - "kafka2_data:/bitnami"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "18080:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka0:9092,kafka1:9093,kafka2:9094
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - zookeeper
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka0_data:
+    driver: local
+  kafka1_data:
+    driver: local
+  kafka2_data:
+    driver: local
