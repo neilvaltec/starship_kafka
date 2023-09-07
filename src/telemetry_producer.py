@@ -27,7 +27,6 @@ while True:
     print(f"Received data from {address}")
     
     if data:
-        print(f"Receiving")
         producer.produce('starship_topic', value=data, callback=delivery_report)
         # Serve delivery callbacks from previous produce() calls
         producer.poll(0.1)
