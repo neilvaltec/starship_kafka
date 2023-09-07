@@ -7,7 +7,7 @@ def consume_messages(index: int):
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9093',
         'group.id': 'unique_group_' + str(index),  # Each consumer should have a unique group ID
-        # 'auto.offset.reset': 'earliest'
+        'auto.offset.reset': 'earliest'
     })
 
     consumer.subscribe(['starship_topic'])

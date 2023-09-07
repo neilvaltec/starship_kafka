@@ -28,6 +28,15 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
+    command:
+      - /bin/sh
+      - -c
+      - |
+        /opt/bitnami/scripts/kafka/entrypoint.sh /opt/bitnami/scripts/kafka/run.sh &
+        PID=$!
+        sleep 30  # Give Kafka some time to start up
+        /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic starship_topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+        wait $PID
 
   kafka-ui:
     image: provectuslabs/kafka-ui
