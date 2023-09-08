@@ -6,7 +6,7 @@
 docker run --rm -it jonasvautherin/px4-gazebo-headless:1.13.2 # start drone simulator
 docker-compose up
 python src/producer_telemetry.py # produce demo data
-python src/check_data.py # use this script to check data
+python src/consumer_check_data.py # use this script to check data
 ```
 
 ## Run with auto generated data
