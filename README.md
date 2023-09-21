@@ -20,5 +20,5 @@ docker-compose up
 python src/producer_demo.py # produce demo data
 python src/consumer_realtime.py # display data in real time
 ```
-## More details about this repo
+## More details about why use kafka and background
 - Check https://github.com/neilvaltec/starship_kafka/issues/1
